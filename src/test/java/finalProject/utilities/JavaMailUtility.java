@@ -1,6 +1,7 @@
 package finalProject.utilities;
 
 import finalProject.models.MailCredentials;
+import finalProject.pages.OneALvProductPage;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -12,8 +13,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class JavaMailUtility {
+    OneALvProductPage oneALvProductPage = new OneALvProductPage();
+    MailCredentials mailCredentials = new MailCredentials();
+
     public void sendMail() throws MessagingException {
-        MailCredentials mailCredentials = new MailCredentials();
         Properties properties = new Properties();
 
         System.out.println("Preparing to send email");
@@ -39,9 +42,9 @@ public class JavaMailUtility {
         System.out.println("Message sent successfully!");
     }
 
-    private static Message prepareMessage(Session session, String myAccountEmail, String recipient) {
-        String emailSubject = "My last test email from Java app";
-        String emailMessage = "Hey there,\nLook my email!";
+    private Message prepareMessage(Session session, String myAccountEmail, String recipient) {
+        String emailSubject = oneALvProductPage.emailContent.getSubject();
+        String emailMessage = oneALvProductPage.emailContent.getTextBody();
         File emailAttachmentPath = new File("C:\\Users\\extes\\OneDrive\\Attēli\\Penguin.png");
 
         Message message = new MimeMessage(session);

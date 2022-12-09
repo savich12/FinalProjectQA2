@@ -1,4 +1,4 @@
-package finalProject;
+package finalProject.tests;
 
 import finalProject.utilities.JavaMailUtility;
 import org.junit.jupiter.api.Test;

@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 public class MailCredentials {
-    String email = "mailLogin/mailFrom";
-    String password = "mailPassword";
-    String recipient = "mailTo";
+    String email = "mail";
+    String password = "pass";
+    String recipient = "mail";
 }
