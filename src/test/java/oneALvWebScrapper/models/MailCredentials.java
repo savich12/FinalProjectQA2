@@ -1,8 +1,6 @@
-package finalProject.models;
+package oneALvWebScrapper.models;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class MailCredentials {
