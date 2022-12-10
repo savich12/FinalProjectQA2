@@ -1,8 +1,7 @@
-package finalProject.pages;
+package oneALvWebScrapper.pages;
 
-import finalProject.common.CommonOneALv;
-import finalProject.models.ProductData;
-import finalProject.models.SearchData;
+import oneALvWebScrapper.common.CommonOneALv;
+import oneALvWebScrapper.models.SearchData;
 import org.openqa.selenium.By;
 
 public class OneALvHomePage extends CommonOneALv {
@@ -10,7 +9,7 @@ public class OneALvHomePage extends CommonOneALv {
     String baseUrl = "https://www.1a.lv/";
     private By closeCookiesButton = By.cssSelector("a[onclick='Cookiebot.dialog.submitConsent()']");
     private By searchField = By.cssSelector("input[id='q'][type='text']");
-//    private By closeCouponsButton = By.xpath("//img[contains(@src, 'https://img.alicdn.com/tfs/TB1a')]");
+    private By cartBox = By.cssSelector("[class='cart-block__handle'][href='/cart']");
 
     public void openBaseUrl() {
         startDriver();
@@ -18,7 +17,7 @@ public class OneALvHomePage extends CommonOneALv {
     }
 
     public void acceptCookies() throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         driver.findElement(closeCookiesButton).click();
     }
 
@@ -26,11 +25,11 @@ public class OneALvHomePage extends CommonOneALv {
         if ("search".equals(action)) {
             driver.findElement(searchField).sendKeys(searchData.getSearchQuery());
             driver.findElement(searchField).submit();
+        } else if ("go to cart".equals(action)) {
+            driver.findElement(cartBox).click();
         } else {
             System.out.println("Something went wrong in homepage action selection!!!");
         }
-        Thread.sleep(1000);
+        Thread.sleep(1500);
     }
-
-
 }

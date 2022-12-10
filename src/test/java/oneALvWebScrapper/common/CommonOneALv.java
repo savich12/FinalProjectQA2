@@ -1,7 +1,8 @@
-package finalProject.common;
+package oneALvWebScrapper.common;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 
 public class CommonOneALv {
@@ -9,9 +10,11 @@ public class CommonOneALv {
     public static Actions actions;
 
     public void startDriver() {
-        String path = "C:\\Users\\extes\\IdeaProjects\\OneALvWebScrapper\\src\\test\\resources\\chromedriver.exe";
-        System.setProperty("webdriver.chrome.driver", path);
-        driver = new ChromeDriver();
+        String driverPath = "C:\\Users\\extes\\IdeaProjects\\OneALvWebScrapper\\src\\test\\resources\\chromedriver.exe";
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless");
+        System.setProperty("webdriver.chrome.driver", driverPath);
+        driver = new ChromeDriver(); //send options for headless
         actions = new Actions(driver);
         driver.manage().window().setSize(new Dimension(1500, 1000));
     }

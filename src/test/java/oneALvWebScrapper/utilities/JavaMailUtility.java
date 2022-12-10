@@ -1,7 +1,6 @@
-package finalProject.utilities;
+package oneALvWebScrapper.utilities;
 
-import finalProject.models.MailCredentials;
-import finalProject.pages.OneALvProductPage;
+import oneALvWebScrapper.models.MailCredentials;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -13,10 +12,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class JavaMailUtility {
-    OneALvProductPage oneALvProductPage = new OneALvProductPage();
     MailCredentials mailCredentials = new MailCredentials();
 
-    public void sendMail() throws MessagingException {
+    public void sendMail(String subject, String textBody, String filePath) throws MessagingException {
         Properties properties = new Properties();
 
         System.out.println("Preparing to send email");
@@ -36,16 +34,35 @@ public class JavaMailUtility {
                 return new PasswordAuthentication(myAccountEmail, password);
             }
         });
-
-        Message message = prepareMessage(session, myAccountEmail, recipient);
-        Transport.send(message);
+        if ("".equals(filePath)) {
+            Message message = prepareMessageWithoutAttachment(session, myAccountEmail, recipient, subject, textBody);
+            Transport.send(message);
+        } else {
+            Message message = prepareMessageWithAttachment(session, myAccountEmail, recipient, subject, textBody, filePath);
+            Transport.send(message);
+        }
         System.out.println("Message sent successfully!");
     }
 
-    private Message prepareMessage(Session session, String myAccountEmail, String recipient) {
-        String emailSubject = oneALvProductPage.emailContent.getSubject();
-        String emailMessage = oneALvProductPage.emailContent.getTextBody();
-        File emailAttachmentPath = new File("C:\\Users\\extes\\OneDrive\\Attēli\\Penguin.png");
+    private Message prepareMessageWithoutAttachment(Session session, String myAccountEmail, String recipient, String emailSubject, String emailMessage) {
+        Message message = new MimeMessage(session);
+        try {
+            message.setFrom(new InternetAddress(myAccountEmail));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+            message.setSubject(emailSubject);
+            Multipart multipart = new MimeMultipart();
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText(emailMessage);
+            multipart.addBodyPart(messageBodyPart);
+            message.setContent(multipart);
+            return message;
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Message prepareMessageWithAttachment(Session session, String myAccountEmail, String recipient, String emailSubject, String emailMessage, String filePath) {
+        File emailAttachmentPath = new File(filePath);
 
         Message message = new MimeMessage(session);
         try {

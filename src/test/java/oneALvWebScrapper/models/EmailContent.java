@@ -1,4 +1,4 @@
-package finalProject.models;
+package oneALvWebScrapper.models;
 
 import lombok.Data;
 
