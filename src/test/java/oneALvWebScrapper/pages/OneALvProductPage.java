@@ -15,7 +15,7 @@ public class OneALvProductPage extends CommonOneALv {
     private By goToCartFromPopupButton = By.cssSelector("[class='main-button'][href='/cart']");
     private By continueBrowsingFromPopup = By.id("continue_shopping");
 
-    public void setProductData() throws InterruptedException {
+    public void setProductData() {
         String productNameProductPage = driver.findElement(productNameText).getText();
         String productPriceProductPage = driver.findElement(productPriceValue).getText() + " " + driver.findElement(productPriceCurrency).getText();
         String productUrlProductPage = driver.getCurrentUrl();
@@ -24,12 +24,11 @@ public class OneALvProductPage extends CommonOneALv {
         productData.setProductUrl(productUrlProductPage);
     }
 
-    public void addProductToCart() throws InterruptedException {
+    public void addProductToCart() {
         driver.findElement(addToCartButton).click();
-        Thread.sleep(1500);
     }
 
-    public void cartPopupAction(String popupAction) throws InterruptedException {
+    public void cartPopupAction(String popupAction) {
         if ("go to cart".equals(popupAction)) {
             driver.findElement(goToCartFromPopupButton).click();
         } else if ("continue browsing".equals(popupAction)) {
@@ -37,7 +36,6 @@ public class OneALvProductPage extends CommonOneALv {
         } else {
             System.out.println("Something went wrong in cart popup action selection!");
         }
-        Thread.sleep(1500);
     }
 
     public void emailFiling() {

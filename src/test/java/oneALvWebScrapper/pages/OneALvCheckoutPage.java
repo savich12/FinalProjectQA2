@@ -4,10 +4,12 @@ import oneALvWebScrapper.common.CommonOneALv;
 import oneALvWebScrapper.models.CustomerData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class OneALvCheckoutPage extends CommonOneALv {
     public CustomerData customerData = new CustomerData();
     private By inStoreRadio = By.cssSelector("[name='shipping_unused'][value='2']");
+    private By parcelMachine = By.cssSelector("[name='shipping_unused'][value='3']");
     private By shippingToLucavsalaRadio = By.cssSelector("[name='pickup_point_id'][value='3210']");
     private By shippingToRumbulaRadio = By.cssSelector("[name='pickup_point_id'][value='3666']");
     private By couponField = By.cssSelector("[class='checkout-order-summary-coupon__input']");
@@ -19,54 +21,57 @@ public class OneALvCheckoutPage extends CommonOneALv {
     private By shippingFullPhoneNumberText = By.xpath("//div[@class='address']");
     private By billingReceiverTable = By.xpath("//td[@class='checkout-order-summary__table-shipping-info']");
 
-    public void shippingMethodSelection(String shippingMethod) throws InterruptedException {
+    public void shippingMethodSelection(String shippingMethod) {
         if ("in store".equals(shippingMethod)) {
-            WebElement inStoreRadioElement = driver.findElement(inStoreRadio);
-            inStoreRadioElement.click();
+            driver.findElement(inStoreRadio).click();
+        } else if ("parcel machine".equals(shippingMethod)) {
+            driver.findElement(parcelMachine).click();
+
         } else {
             System.out.println("Something went wrong in shipping method selection!");
         }
-        Thread.sleep(1500);
     }
 
-    public void shippingStoreSelection(String shippingStore) throws InterruptedException {
+    public void shippingStoreSelection(String shippingStore) {
         if ("Lucavsala".equals(shippingStore)) {
-            WebElement shippingStoreRadioElement = driver.findElement(shippingToLucavsalaRadio);
-            shippingStoreRadioElement.click();
+            driver.findElement(shippingToLucavsalaRadio).click();
         } else if ("Rumbula".equals(shippingStore)) {
-            WebElement shippingStoreRadioElement = driver.findElement(shippingToRumbulaRadio);
-            shippingStoreRadioElement.click();
+            driver.findElement(shippingToRumbulaRadio).click();
         } else {
             System.out.println("Something went wrong in shipment store selection!");
         }
-        Thread.sleep(1500);
     }
 
     public void fillCoupon(String coupon) {
         driver.findElement(couponField).sendKeys(coupon);
     }
 
-    public void couponSubmit() throws InterruptedException {
+    public void couponSubmit() {
         driver.findElement(couponField).submit();
-        Thread.sleep(1500);
     }
 
     public void fillReceiverName() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(shippingNameField));
+        scrollUntilLocatorFoundAndClick(shippingNameField);
         driver.findElement(shippingNameField).sendKeys(customerData.getCustomerName());
     }
 
     public void fillReceiverSurname() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(shippingSurnameField));
+        scrollUntilLocatorFoundAndClick(shippingNameField);
         driver.findElement(shippingSurnameField).sendKeys(customerData.getCustomerSurname());
     }
 
     public void fillReceiverPhoneNumber() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(shippingPhoneNumberField));
+        scrollUntilLocatorFoundAndClick(shippingNameField);
         driver.findElement(shippingPhoneNumberField).sendKeys(customerData.getCustomerPhoneNumber());
     }
 
-    public void submitReceiverData() throws InterruptedException {
+    public void submitReceiverData() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(shippingSubmitButton));
         WebElement submitReceiverDataElement = driver.findElements(shippingSubmitButton).get(0);
-        submitReceiverDataElement.click();
-        Thread.sleep(1500);
+        scrollUntilElementFoundAndClick(submitReceiverDataElement);
     }
 
     public void setCustomerFullData() {
@@ -76,10 +81,9 @@ public class OneALvCheckoutPage extends CommonOneALv {
         customerData.setCustomerFullPhoneNumber(receiverDataArr[0]);
     }
 
-    public void submitShippingForm() throws InterruptedException {
+    public void submitShippingForm() {
         WebElement submitShippingButtonElement = driver.findElements(shippingSubmitButton).get(1);
-        submitShippingButtonElement.click();
-        Thread.sleep(1500);
+        scrollUntilElementFoundAndClick(submitShippingButtonElement);
     }
 
     public void setFinalCustomerData() {
@@ -87,5 +91,11 @@ public class OneALvCheckoutPage extends CommonOneALv {
         String[] finalDataArr = finalData.split("\n");
         customerData.setFinalCustomerFullName(finalDataArr[0]);
         customerData.setFinalCustomerFullPhoneNumber(finalDataArr[1]);
+    }
+
+    public void validateFinalCustomerDataWithDataOnShipmentPage() {
+        softAssertions.assertThat(customerData.getFinalCustomerFullName()).isEqualTo(customerData.getCustomerFullName());
+        softAssertions.assertThat(customerData.getFinalCustomerFullPhoneNumber()).isEqualTo(customerData.getCustomerFullPhoneNumber());
+        softAssertions.assertAll();
     }
 }

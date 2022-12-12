@@ -4,11 +4,11 @@ import oneALvWebScrapper.common.CommonOneALv;
 import oneALvWebScrapper.pages.*;
 import oneALvWebScrapper.utilities.JavaMailUtility;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.mail.MessagingException;
+import java.util.concurrent.TimeUnit;
 
 public class OneALvTest extends CommonOneALv {
     JavaMailUtility javaMailUtility = new JavaMailUtility();
@@ -27,47 +27,40 @@ public class OneALvTest extends CommonOneALv {
         oneALvCheckoutPage.customerData.setCustomerName("Obivan");
         oneALvCheckoutPage.customerData.setCustomerSurname("Kenobi");
         oneALvCheckoutPage.customerData.setCustomerPhoneNumber("22334455");
+        oneALvSearchPage.searchFilterData.setExpandFilterMenu("Modelis");
+        oneALvSearchPage.searchFilterData.setFirstType("Videokartes");
+        oneALvSearchPage.searchFilterData.setFirstBrand("Gigabyte");
+        oneALvSearchPage.searchFilterData.setSecondBrand("MSI");
+        oneALvSearchPage.searchFilterData.setFirstModel("GeForce RTX 3060");
+        oneALvSearchPage.searchFilterData.setSortingFilterComboBox("Populārākās preces");
+        oneALvSearchPage.searchFilterData.setSortingFilterValue("Cenas, sākot no zemākās");
     }
 
-
     @Test
-    public void orderingTest() throws InterruptedException, MessagingException {
+    public void orderingTest() throws MessagingException, InterruptedException {
         for (int i = 11; i > 10; i++) {
             oneALvHomePage.openBaseUrl();
             oneALvHomePage.acceptCookies();
             oneALvHomePage.selectAction("search");
-            scrollPage(600);
-            Thread.sleep(1500);
             oneALvSearchPage.productTypeSelection("GPU");
-            scrollPage(500);
-            Thread.sleep(1500);
             oneALvSearchPage.productBrandSelection("gigabyte");
-            scrollPage(500);
-            Thread.sleep(1500);
             oneALvSearchPage.productBrandSelection("msi");
-            scrollPage(1200);
-            Thread.sleep(1500);
-            oneALvSearchPage.productModelMenuExpansion();
-            oneALvSearchPage.productModelSelection();
+            oneALvSearchPage.productMenuExpansion("model");
+            oneALvSearchPage.productModelSelection("geforce rtx 3060");
             oneALvSearchPage.setMinMaxPriceToZero();
             oneALvSearchPage.setMaxPrice("500");
-            oneALvSearchPage.selectFilterBy();
-            scrollPage(500);
-            Thread.sleep(1500);
+            oneALvSearchPage.selectProductSorting("prices from lowest");
             oneALvSearchPage.openProduct();
             oneALvProductPage.setProductData();
             oneALvProductPage.addProductToCart();
             oneALvProductPage.cartPopupAction("go to cart");
             oneALvCartPage.setCartData();
-            softAssertions.assertThat(oneALvProductPage.productData.getProductName()).isEqualTo(oneALvCartPage.cartData.getCartProductName());
-            softAssertions.assertThat(oneALvProductPage.productData.getProductPrice()).isEqualTo(oneALvCartPage.cartData.getCartProductPrice());
+            oneALvCartPage.validateCartDataWithProductData(oneALvProductPage.productData.getProductName(), oneALvProductPage.productData.getProductPrice());
             oneALvCartPage.submitCart();
             oneALvProductPurchaseAuthorizationPage.fillAuthorizeWithoutLogin("yoda@gmail.com");
             oneALvProductPurchaseAuthorizationPage.submitAuthorizeWithoutLogin();
             oneALvCheckoutPage.shippingMethodSelection("in store");
             oneALvCheckoutPage.shippingStoreSelection("Lucavsala");
-            scrollPage(1000);
-            Thread.sleep(1500);
             oneALvCheckoutPage.fillReceiverName();
             oneALvCheckoutPage.fillReceiverSurname();
             oneALvCheckoutPage.fillReceiverPhoneNumber();
@@ -75,9 +68,7 @@ public class OneALvTest extends CommonOneALv {
             oneALvCheckoutPage.setCustomerFullData();
             oneALvCheckoutPage.submitShippingForm();
             oneALvCheckoutPage.setFinalCustomerData();
-            softAssertions.assertThat(oneALvCheckoutPage.customerData.getFinalCustomerFullName()).isEqualTo(oneALvCheckoutPage.customerData.getCustomerFullName());
-            softAssertions.assertThat(oneALvCheckoutPage.customerData.getFinalCustomerFullPhoneNumber()).isEqualTo(oneALvCheckoutPage.customerData.getCustomerFullPhoneNumber());
-            softAssertions.assertAll();
+            oneALvCheckoutPage.validateFinalCustomerDataWithDataOnShipmentPage();
             oneALvProductPage.emailFiling();
             System.out.println(oneALvProductPage.emailContent.getSubject());
             System.out.println(oneALvProductPage.emailContent.getTextBody());
@@ -86,16 +77,7 @@ public class OneALvTest extends CommonOneALv {
             int cycleCount = 0;
             cycleCount++;
             System.out.println("Number of scrapper runs: " + cycleCount);
-            Thread.sleep(120000);
+            TimeUnit.MINUTES.sleep(2);
         }
-    }
-
-    @After
-    public void cleanModelData() {
-        oneALvProductPage.emailContent = null;
-        oneALvProductPage.productData = null;
-        oneALvCheckoutPage.customerData = null;
-        oneALvCartPage.cartData = null;
-        oneALvHomePage.searchData = null;
     }
 }
