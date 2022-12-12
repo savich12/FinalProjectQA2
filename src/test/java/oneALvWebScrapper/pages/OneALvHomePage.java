@@ -3,6 +3,8 @@ package oneALvWebScrapper.pages;
 import oneALvWebScrapper.common.CommonOneALv;
 import oneALvWebScrapper.models.SearchData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class OneALvHomePage extends CommonOneALv {
     public SearchData searchData = new SearchData();
@@ -10,18 +12,19 @@ public class OneALvHomePage extends CommonOneALv {
     private By closeCookiesButton = By.cssSelector("a[onclick='Cookiebot.dialog.submitConsent()']");
     private By searchField = By.cssSelector("input[id='q'][type='text']");
     private By cartBox = By.cssSelector("[class='cart-block__handle'][href='/cart']");
+    private By cookieBanner = By.id("cookiebanner");
 
     public void openBaseUrl() {
         startDriver();
         driver.get(baseUrl);
     }
 
-    public void acceptCookies() throws InterruptedException {
-        Thread.sleep(1500);
-        driver.findElement(closeCookiesButton).click();
+    public void acceptCookies() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cookieBanner));
+        checkLocatorAvailabilityAndClick(closeCookiesButton);
     }
 
-    public void selectAction(String action) throws InterruptedException {
+    public void selectAction(String action) {
         if ("search".equals(action)) {
             driver.findElement(searchField).sendKeys(searchData.getSearchQuery());
             driver.findElement(searchField).submit();
@@ -30,6 +33,5 @@ public class OneALvHomePage extends CommonOneALv {
         } else {
             System.out.println("Something went wrong in homepage action selection!!!");
         }
-        Thread.sleep(1500);
     }
 }

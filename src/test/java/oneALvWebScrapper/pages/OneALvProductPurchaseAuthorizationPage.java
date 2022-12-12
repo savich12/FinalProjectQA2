@@ -13,9 +13,8 @@ public class OneALvProductPurchaseAuthorizationPage extends CommonOneALv {
         authorizeWithoutLoginEmailElement.sendKeys(email);
     }
 
-    public void submitAuthorizeWithoutLogin() throws InterruptedException {
+    public void submitAuthorizeWithoutLogin() {
         WebElement authorizeWithoutLoginSubmitElement = driver.findElements(authorizationSubmitButton).get(1);
         authorizeWithoutLoginSubmitElement.click();
-        Thread.sleep(1500);
     }
 }

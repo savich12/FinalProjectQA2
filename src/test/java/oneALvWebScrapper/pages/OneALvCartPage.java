@@ -16,8 +16,13 @@ public class OneALvCartPage extends CommonOneALv {
         cartData.setCartProductPrice(driver.findElement(cartProductPriceText).getText());
     }
 
-    public void submitCart() throws InterruptedException {
+    public void validateCartDataWithProductData(String productName, String productPrice) {
+        softAssertions.assertThat(cartData.getCartProductName()).isEqualTo(productName);
+        softAssertions.assertThat(cartData.getCartProductPrice()).isEqualTo(productPrice);
+        softAssertions.assertAll();
+    }
+
+    public void submitCart() {
         driver.findElement(cartSubmitButton).click();
-        Thread.sleep(1000);
     }
 }
