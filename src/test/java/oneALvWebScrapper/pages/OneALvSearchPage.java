@@ -72,6 +72,10 @@ public class OneALvSearchPage extends CommonOneALv {
         driver.findElement(maxPriceField).clear();
     }
 
+    public String getCurrentUrlWithFilters() {
+        return driver.getCurrentUrl();
+    }
+
     public void selectProductSorting(String sorting) {
         By sortingFilterComboBox = By.cssSelector("span[title='" + searchFilterData.getSortingFilterComboBox() + "']");
         By pricesFromLowestSorting = By.xpath("//li[text()='" + searchFilterData.getSortingFilterValue() + "']");
@@ -85,9 +89,9 @@ public class OneALvSearchPage extends CommonOneALv {
         }
     }
 
-    public void openProduct() {
+    public void openProduct(int productNumber) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(sortingTable));
-        WebElement productElement = driver.findElements(allProducts).get(0);
+        WebElement productElement = driver.findElements(allProducts).get(productNumber);
         scrollUntilElementFoundAndClick(productElement);
     }
 }
