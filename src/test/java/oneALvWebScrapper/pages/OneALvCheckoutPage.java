@@ -20,6 +20,7 @@ public class OneALvCheckoutPage extends CommonOneALv {
     private By shippingFullNameText = By.xpath("//div[@class='name']");
     private By shippingFullPhoneNumberText = By.xpath("//div[@class='address']");
     private By billingReceiverTable = By.xpath("//td[@class='checkout-order-summary__table-shipping-info']");
+    private By returnToCartButton = By.className("checkout-order-summary-visit-cart__link-label");
 
     public void shippingMethodSelection(String shippingMethod) {
         if ("in store".equals(shippingMethod)) {
@@ -50,26 +51,29 @@ public class OneALvCheckoutPage extends CommonOneALv {
         driver.findElement(couponField).submit();
     }
 
-    public void fillReceiverName() {
+    public void fillReceiverName(String name) {
+        customerData.setCustomerName(name);
         wait.until(ExpectedConditions.visibilityOfElementLocated(shippingNameField));
         scrollUntilLocatorFoundAndClick(shippingNameField);
         driver.findElement(shippingNameField).sendKeys(customerData.getCustomerName());
     }
 
-    public void fillReceiverSurname() {
+    public void fillReceiverSurname(String surname) {
+        customerData.setCustomerSurname(surname);
         wait.until(ExpectedConditions.visibilityOfElementLocated(shippingSurnameField));
         scrollUntilLocatorFoundAndClick(shippingNameField);
         driver.findElement(shippingSurnameField).sendKeys(customerData.getCustomerSurname());
     }
 
-    public void fillReceiverPhoneNumber() {
+    public void fillReceiverPhoneNumber(String phoneNumber) {
+        customerData.setCustomerPhoneNumber(phoneNumber);
         wait.until(ExpectedConditions.visibilityOfElementLocated(shippingPhoneNumberField));
         scrollUntilLocatorFoundAndClick(shippingNameField);
         driver.findElement(shippingPhoneNumberField).sendKeys(customerData.getCustomerPhoneNumber());
     }
 
     public void submitReceiverData() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(shippingSubmitButton));
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(shippingSubmitButton));
         WebElement submitReceiverDataElement = driver.findElements(shippingSubmitButton).get(0);
         scrollUntilElementFoundAndClick(submitReceiverDataElement);
     }
@@ -97,5 +101,9 @@ public class OneALvCheckoutPage extends CommonOneALv {
         softAssertions.assertThat(customerData.getFinalCustomerFullName()).isEqualTo(customerData.getCustomerFullName());
         softAssertions.assertThat(customerData.getFinalCustomerFullPhoneNumber()).isEqualTo(customerData.getCustomerFullPhoneNumber());
         softAssertions.assertAll();
+    }
+
+    public void returnToCart() {
+        scrollUntilLocatorFoundAndClick(returnToCartButton);
     }
 }

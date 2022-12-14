@@ -10,18 +10,15 @@ repositories {
 }
 
 dependencies {
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.6.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.9.1'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.23.1'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-    testImplementation 'org.seleniumhq.selenium:selenium-java:4.6.0'
-    testImplementation 'io.cucumber:cucumber-java:7.9.0'
-    testImplementation 'io.cucumber:cucumber-junit:7.9.0'
-    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.9.1'
-    testImplementation 'com.codeborne:selenide:6.10.1'
 }
 
 test {
