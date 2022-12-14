@@ -1,12 +1,12 @@
 package oneALvWebScrapper.pages;
 
 import oneALvWebScrapper.common.CommonOneALv;
+import oneALvWebScrapper.models.EmailContent;
 import oneALvWebScrapper.models.ProductData;
-import oneALvWebScrapper.utilities.FileUtility;
 import org.openqa.selenium.By;
 
 public class OneALvProductPage extends CommonOneALv {
-    FileUtility fileUtility = new FileUtility();
+    public EmailContent emailContent = new EmailContent();
     public ProductData productData = new ProductData();
     private By productNameText = By.xpath("//h1");
     private By productPriceValue = By.xpath("//span[@class='price']/child::span[1]");
@@ -38,10 +38,10 @@ public class OneALvProductPage extends CommonOneALv {
         }
     }
 
-    public void fileFilling() {
-        fileUtility.appendToTxtFile("-------------------------\nProduct: " + productData.getProductName()
-                + ",\nProductPrice: " + productData.getProductPrice()
-                + ",\nProduct URL: " + productData.getProductUrl()
-                + " .\n-------------------------\n");
+    public void emailFiling() {
+        emailContent.setSubject("Scrapper: " + productData.getProductName());
+        emailContent.setTextBody("Product: " + productData.getProductName() + ",\nProductPrice: " + productData.getProductPrice()
+                + ",\nProduct URL: " + productData.getProductUrl() + " .");
+        emailContent.setFilePath("");
     }
 }
