@@ -9,12 +9,10 @@ public class OneALvProductPurchaseAuthorizationPage extends CommonOneALv {
     private By authorizationSubmitButton = By.cssSelector("[type='submit'][name='commit']");
 
     public void fillAuthorizeWithoutLogin(String email) {
-        WebElement authorizeWithoutLoginEmailElement = driver.findElements(authorizationEmailField).get(1);
-        authorizeWithoutLoginEmailElement.sendKeys(email);
+        driver.findElements(authorizationEmailField).get(1).sendKeys(email);
     }
 
     public void submitAuthorizeWithoutLogin() {
-        WebElement authorizeWithoutLoginSubmitElement = driver.findElements(authorizationSubmitButton).get(1);
-        authorizeWithoutLoginSubmitElement.click();
+        driver.findElements(authorizationSubmitButton).get(1).click();
     }
 }

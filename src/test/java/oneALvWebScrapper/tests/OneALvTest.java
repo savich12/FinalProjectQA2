@@ -8,18 +8,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.mail.MessagingException;
-import java.util.concurrent.TimeUnit;
 
 public class OneALvTest extends CommonOneALv {
-    JavaMailUtility javaMailUtility = new JavaMailUtility();
     OneALvHomePage oneALvHomePage = new OneALvHomePage();
     OneALvSearchPage oneALvSearchPage = new OneALvSearchPage();
     OneALvProductPage oneALvProductPage = new OneALvProductPage();
     OneALvCartPage oneALvCartPage = new OneALvCartPage();
     OneALvProductPurchaseAuthorizationPage oneALvProductPurchaseAuthorizationPage = new OneALvProductPurchaseAuthorizationPage();
     OneALvCheckoutPage oneALvCheckoutPage = new OneALvCheckoutPage();
-    SoftAssertions softAssertions = new SoftAssertions();
-
+    JavaMailUtility javaMailUtility = new JavaMailUtility();
 
     @Before
     public void setModelData() {
@@ -37,7 +34,8 @@ public class OneALvTest extends CommonOneALv {
     }
 
     @Test
-    public void orderingTest() throws MessagingException, InterruptedException {
+    public void orderingTest() throws MessagingException {
+        int cycleCount = 0;
         for (int i = 11; i > 10; i++) {
             oneALvHomePage.openBaseUrl();
             oneALvHomePage.acceptCookies();
@@ -45,8 +43,8 @@ public class OneALvTest extends CommonOneALv {
             oneALvSearchPage.productTypeSelection("GPU");
             oneALvSearchPage.productBrandSelection("gigabyte");
             oneALvSearchPage.productBrandSelection("msi");
-            oneALvSearchPage.productMenuExpansion("model");
-            oneALvSearchPage.productModelSelection("geforce rtx 3060");
+//            oneALvSearchPage.productMenuExpansion("model");
+//            oneALvSearchPage.productModelSelection("geforce rtx 3060");
             oneALvSearchPage.setMinMaxPriceToZero();
             oneALvSearchPage.setMaxPrice("500");
             oneALvSearchPage.selectProductSorting("prices from lowest");
@@ -74,10 +72,8 @@ public class OneALvTest extends CommonOneALv {
             System.out.println(oneALvProductPage.emailContent.getTextBody());
             javaMailUtility.sendMail(oneALvProductPage.emailContent.getSubject(), oneALvProductPage.emailContent.getTextBody(), oneALvProductPage.emailContent.getFilePath());
             stopDriver();
-            int cycleCount = 0;
             cycleCount++;
             System.out.println("Number of scrapper runs: " + cycleCount);
-            TimeUnit.MINUTES.sleep(2);
         }
     }
 }
